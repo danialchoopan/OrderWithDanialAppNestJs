@@ -1,0 +1,39 @@
+name: Daily Contribution Bot
+
+on:
+  schedule:
+    # Runs at multiple random times throughout the day
+    - cron: '17 3 * * *'   # 3:17 AM UTC
+    - cron: '42 9 * * *'   # 9:42 AM UTC  
+    - cron: '8 15 * * *'   # 3:08 PM UTC
+    - cron: '33 21 * * *'  # 9:33 PM UTC
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Configure Git
+        run: |
+          git config user.name "danialch"
+          git config user.email "danialchpan@gmail.com"
+          
+      - name: Create Random Update
+        run: |
+          chmod +x .github/scripts/random-update.sh
+          .github/scripts/random-update.sh
+          
+      - name: Push Changes
+        run: |
+          git push origin main --force-with-lease || {
+            echo "⚠️ Push failed, pulling latest and retrying..."
+            git pull origin main --rebase
+            git push origin main --force-with-lease
+          }
