@@ -16,8 +16,8 @@
 .updates/
 .update-logs/
 
-# Hide script files from being tracked
-.github/scripts/
+# Hide automation scripts (but keep them in repo for GitHub Actions)
+# Note: .github/scripts/ is NOT ignored - needed for workflow
 
 # OS files
 .DS_Store
